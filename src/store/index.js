@@ -27,7 +27,7 @@ export default new Vuex.Store({
         context.clearRect(0, 0, dimensions.width, dimensions.height);
 
         store.state.hexes.forEach(hex => {
-          hex.render(context, dimensions);
+          hex.render(context, dimensions.center);
         });
 
         requestAnimationFrame(renderLoop);

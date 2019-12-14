@@ -6,6 +6,7 @@
 
 <script>
 import { mapActions } from "vuex";
+import Point from "../classes/Point";
 
 export default {
   mounted() {
@@ -16,7 +17,11 @@ export default {
     this.$refs["canvas"].height = height;
 
     let context = this.$refs["canvas"].getContext("2d");
-    let dimensions = { x: width / 2, y: height / 2, height, width };
+    let dimensions = {
+      center: new Point(width / 2, height / 2),
+      height,
+      width
+    };
 
     this.startRenderLoop({ context, dimensions });
   },
