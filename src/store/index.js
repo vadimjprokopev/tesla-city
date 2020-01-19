@@ -3,6 +3,7 @@ import Vuex from "vuex";
 import Hex from "../classes/Hex";
 import { timestep, lightningSpawnPerPeriodIncrement } from "../Constants";
 import Lightning from "../classes/Lightning";
+import Point from "../classes/Point";
 
 Vue.use(Vuex);
 
@@ -21,14 +22,27 @@ export default new Vuex.Store({
       state.hexes.push(...firstRing);
     },
     increaseLightningFrequency(state) {
+      if (state.money < 100) {
+        return;
+      }
+
       state.lightningSpawnPerPeriod += lightningSpawnPerPeriodIncrement;
+      state.money -= state.lightningSpawnPerPeriodPrice;
+      state.lightningSpawnPerPeriodPrice *= lightningSpawnPerPeriodPriceIncrease;
     }
   },
   actions: {
     startRenderLoop(store, { context, dimensions }) {
       // for some reason this makes all lines thinner and nicer
       // https://www.rgraph.net/canvas/docs/howto-get-crisp-lines-with-no-antialias.html
-      context.translate(0.5, 0.5);
+      context.setTransform(
+        1,
+        0,
+        0,
+        1,
+        dimensions.center.x + 0.5,
+        dimensions.center.y + 0.5
+      );
 
       let delta = 0;
       let lastFrameTimeMs = 0;
@@ -50,25 +64,22 @@ export default new Vuex.Store({
               ];
 
             store.state.lightnings.push(
-              new Lightning(
-                dimensions.center,
-                dimensions.center.add(
-                  randomHex.offsetFromCenter().x,
-                  randomHex.offsetFromCenter().y
-                )
-              )
+              new Lightning(new Point(0, 0), randomHex.realPosition())
             );
           }
 
           delta -= timestep;
         }
 
+        context.save();
+        context.setTransform(1, 0, 0, 1, 0, 0);
         context.clearRect(0, 0, dimensions.width, dimensions.height);
+        context.restore();
 
         store.state.centralHex.render(context, dimensions.center);
 
         store.state.hexes.forEach(hex => {
-          hex.render(context, dimensions.center);
+          hex.render(context);
         });
 
         store.state.lightnings = store.state.lightnings.filter(

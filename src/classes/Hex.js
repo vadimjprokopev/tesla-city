@@ -40,29 +40,27 @@ export default class Hex {
     return hexes;
   }
 
-  offsetFromCenter() {
+  realPosition() {
     const xOffset = this.x * 1.5 * length;
     const yOffset =
       Math.sqrt(3) * this.y * length + this.x * length * Math.cos(Math.PI / 6);
     return new Point(xOffset, yOffset);
   }
 
-  render(context, center) {
+  render(context) {
     context.beginPath();
 
     context.moveTo(
-      center.x + 1.5 * this.x * length + length * Math.cos(0),
-      center.y +
-        Math.sqrt(3) * this.y * length +
+      1.5 * this.x * length + length * Math.cos(0),
+      Math.sqrt(3) * this.y * length +
         this.x * length * Math.cos(Math.PI / 6) +
         length * Math.sin(0)
     );
 
     for (let i = 1; i <= 6; i++) {
       context.lineTo(
-        center.x + 1.5 * this.x * length + length * Math.cos(angle * i),
-        center.y +
-          Math.sqrt(3) * this.y * length +
+        1.5 * this.x * length + length * Math.cos(angle * i),
+        Math.sqrt(3) * this.y * length +
           this.x * length * Math.cos(Math.PI / 6) +
           length * Math.sin(angle * i)
       );
