@@ -1,14 +1,14 @@
 <template>
-  <the-canvas />
+  <the-interface />
 </template>
 
 <script>
-import TheCanvas from "./components/TheCanvas.vue";
+import TheInterface from "./components/TheInterface";
 
 export default {
   name: "app",
   components: {
-    TheCanvas
+    TheInterface
   },
   mounted() {
     this.$store.commit("initialize");

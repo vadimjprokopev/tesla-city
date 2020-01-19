@@ -7,4 +7,4 @@ export const branchingAngleMean = Math.PI / 6;
 export const branchingLengthModifier = 0.2;
 export const segmentConstantLifetime = 100;
 export const timestep = 1000 / 60;
-export const lightningSpawnPerPeriod = 0.5;
+export const lightningSpawnPerPeriodIncrement = 0.1;

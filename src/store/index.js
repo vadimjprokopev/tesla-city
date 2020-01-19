@@ -1,7 +1,7 @@
 import Vue from "vue";
 import Vuex from "vuex";
 import Hex from "../classes/Hex";
-import { timestep, lightningSpawnPerPeriod } from "../Constants";
+import { timestep, lightningSpawnPerPeriodIncrement } from "../Constants";
 import Lightning from "../classes/Lightning";
 
 Vue.use(Vuex);
@@ -10,7 +10,8 @@ export default new Vuex.Store({
   state: {
     centralHex: null,
     hexes: [],
-    lightnings: []
+    lightnings: [],
+    lightningSpawnPerPeriod: 0
   },
   mutations: {
     initialize(state) {
@@ -18,6 +19,9 @@ export default new Vuex.Store({
       state.centralHex = centralHex;
       let firstRing = centralHex.createRing(1);
       state.hexes.push(...firstRing);
+    },
+    increaseLightningFrequency(state) {
+      state.lightningSpawnPerPeriod += lightningSpawnPerPeriodIncrement;
     }
   },
   actions: {
@@ -35,7 +39,7 @@ export default new Vuex.Store({
         lastFrameTimeMs = timestamp;
 
         while (delta >= timestep) {
-          lightningSpawnBuffer += lightningSpawnPerPeriod;
+          lightningSpawnBuffer += store.state.lightningSpawnPerPeriod;
 
           while (lightningSpawnBuffer >= 1) {
             lightningSpawnBuffer -= 1;
