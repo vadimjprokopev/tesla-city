@@ -1,3 +1,5 @@
+import Point from "./Point";
+
 const angle = Math.PI / 3;
 const length = 30;
 
@@ -36,6 +38,13 @@ export default class Hex {
     }
 
     return hexes;
+  }
+
+  offsetFromCenter() {
+    const xOffset = this.x * 1.5 * length;
+    const yOffset =
+      Math.sqrt(3) * this.y * length + this.x * length * Math.cos(Math.PI / 6);
+    return new Point(xOffset, yOffset);
   }
 
   render(context, center) {
