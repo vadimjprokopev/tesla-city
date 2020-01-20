@@ -1,7 +1,10 @@
 <template>
   <div>
+    <div>Money: {{ $store.state.money }}</div>
     <the-canvas />
-    <button @click="increaseLightningFrequency">Increase frequency</button>
+    <button @click="increaseLightningFrequency">
+      Increase frequency {{ $store.state.lightningSpawnPerPeriodPrice }}
+    </button>
   </div>
 </template>
 

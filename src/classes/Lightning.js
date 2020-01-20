@@ -11,7 +11,7 @@ import {
 } from "../Constants";
 
 export default class Lightning {
-  constructor(startPoint, targetPoint) {
+  constructor(startPoint, targetPoint, target) {
     this.branches = [];
     this.segments = [];
     this.previousPoint = startPoint;
@@ -19,6 +19,7 @@ export default class Lightning {
     this.reachedTarget = false;
     this.segmentSpawnBuffer = 0;
     this.alive = true;
+    this.target = target;
   }
 
   update() {
@@ -56,6 +57,9 @@ export default class Lightning {
       if (distanceToTarget <= maxLength) {
         this.segments.push(new Segment(this.previousPoint, this.targetPoint));
         this.reachedTarget = true;
+        if (this.target) {
+          this.target.activate();
+        }
         break;
       }
 

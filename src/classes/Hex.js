@@ -1,7 +1,9 @@
 import Point from "./Point";
+import store from "../store";
 
 const angle = Math.PI / 3;
 const length = 30;
+const value = 1;
 
 export default class Hex {
   constructor(x, y) {
@@ -66,5 +68,9 @@ export default class Hex {
       );
     }
     context.stroke();
+  }
+
+  activate() {
+    store.commit("addMoney", value);
   }
 }

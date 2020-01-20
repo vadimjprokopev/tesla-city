@@ -1,7 +1,11 @@
 import Vue from "vue";
 import Vuex from "vuex";
 import Hex from "../classes/Hex";
-import { timestep, lightningSpawnPerPeriodIncrement } from "../Constants";
+import {
+  timestep,
+  lightningSpawnPerPeriodIncrement,
+  lightningSpawnPerPeriodPriceIncrease
+} from "../Constants";
 import Lightning from "../classes/Lightning";
 import Point from "../classes/Point";
 
@@ -12,7 +16,9 @@ export default new Vuex.Store({
     centralHex: null,
     hexes: [],
     lightnings: [],
-    lightningSpawnPerPeriod: 0
+    lightningSpawnPerPeriod: 0,
+    lightningSpawnPerPeriodPrice: 10,
+    money: 10
   },
   mutations: {
     initialize(state) {
@@ -22,13 +28,20 @@ export default new Vuex.Store({
       state.hexes.push(...firstRing);
     },
     increaseLightningFrequency(state) {
-      if (state.money < 100) {
+      if (state.money < state.lightningSpawnPerPeriodPrice) {
         return;
       }
 
       state.lightningSpawnPerPeriod += lightningSpawnPerPeriodIncrement;
       state.money -= state.lightningSpawnPerPeriodPrice;
-      state.lightningSpawnPerPeriodPrice *= lightningSpawnPerPeriodPriceIncrease;
+
+      state.lightningSpawnPerPeriodPrice = Math.round(
+        state.lightningSpawnPerPeriodPrice *
+          lightningSpawnPerPeriodPriceIncrease
+      );
+    },
+    addMoney(state, amount) {
+      state.money += amount;
     }
   },
   actions: {
@@ -64,7 +77,11 @@ export default new Vuex.Store({
               ];
 
             store.state.lightnings.push(
-              new Lightning(new Point(0, 0), randomHex.realPosition())
+              new Lightning(
+                new Point(0, 0),
+                randomHex.realPosition(),
+                randomHex
+              )
             );
           }
 
