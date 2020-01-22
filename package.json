@@ -5,7 +5,9 @@
   "scripts": {
     "serve": "vue-cli-service serve",
     "build": "vue-cli-service build",
-    "lint": "vue-cli-service lint"
+    "lint": "vue-cli-service lint",
+    "start": "npx http-server ./dist",
+    "deploy": "git push heroku master"
   },
   "dependencies": {
     "core-js": "^3.3.2",
