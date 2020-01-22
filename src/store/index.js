@@ -16,8 +16,9 @@ export default new Vuex.Store({
     centralHex: null,
     hexes: [],
     lightnings: [],
-    lightningSpawnPerPeriod: 0,
+    lightningSpawnPerPeriod: 0.05,
     lightningSpawnPerPeriodPrice: 10,
+    lightningCharge: 0.3,
     money: 10
   },
   mutations: {
@@ -66,6 +67,14 @@ export default new Vuex.Store({
         lastFrameTimeMs = timestamp;
 
         while (delta >= timestep) {
+          store.state.lightnings.forEach(lightning => {
+            lightning.update();
+          });
+
+          store.state.hexes.forEach(hex => {
+            hex.update();
+          });
+
           lightningSpawnBuffer += store.state.lightningSpawnPerPeriod;
 
           while (lightningSpawnBuffer >= 1) {
@@ -80,7 +89,8 @@ export default new Vuex.Store({
               new Lightning(
                 new Point(0, 0),
                 randomHex.realPosition(),
-                randomHex
+                randomHex,
+                store.state.lightningCharge
               )
             );
           }
@@ -104,7 +114,6 @@ export default new Vuex.Store({
         );
 
         store.state.lightnings.forEach(lightning => {
-          lightning.update();
           lightning.render(context);
         });
 

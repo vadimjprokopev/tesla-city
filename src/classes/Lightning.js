@@ -11,7 +11,7 @@ import {
 } from "../Constants";
 
 export default class Lightning {
-  constructor(startPoint, targetPoint, target) {
+  constructor(startPoint, targetPoint, target, charge) {
     this.branches = [];
     this.segments = [];
     this.previousPoint = startPoint;
@@ -20,6 +20,7 @@ export default class Lightning {
     this.segmentSpawnBuffer = 0;
     this.alive = true;
     this.target = target;
+    this.charge = charge;
   }
 
   update() {
@@ -58,7 +59,7 @@ export default class Lightning {
         this.segments.push(new Segment(this.previousPoint, this.targetPoint));
         this.reachedTarget = true;
         if (this.target) {
-          this.target.activate();
+          this.target.activate(this.charge);
         }
         break;
       }

@@ -3,12 +3,15 @@ import store from "../store";
 
 const angle = Math.PI / 3;
 const length = 30;
-const value = 1;
+const value = 10;
+const minDischargeRate = 0.05;
+const dischargeRate = 0.05;
 
 export default class Hex {
   constructor(x, y) {
     this.x = x;
     this.y = y;
+    this.charge = 0;
   }
 
   static directions() {
@@ -68,9 +71,41 @@ export default class Hex {
       );
     }
     context.stroke();
+
+    const leftX = 1.5 * this.x * length + length * Math.cos(angle * 2);
+    const rightX = 1.5 * this.x * length + length * Math.cos(angle * 5);
+    const bottomY =
+      Math.sqrt(3) * this.y * length +
+      this.x * length * Math.cos(Math.PI / 6) +
+      length * Math.sin(angle * 2);
+    const topY =
+      Math.sqrt(3) * this.y * length +
+      this.x * length * Math.cos(Math.PI / 6) +
+      length * Math.sin(angle * 4);
+
+    context.beginPath();
+
+    context.moveTo(leftX, bottomY);
+
+    context.lineTo(leftX, bottomY + this.charge * (topY - bottomY));
+
+    context.lineTo(rightX, bottomY + this.charge * (topY - bottomY));
+
+    context.lineTo(rightX, bottomY);
+
+    context.fill();
   }
 
-  activate() {
-    store.commit("addMoney", value);
+  update() {
+    let discharge = Math.min(
+      Math.max(dischargeRate * this.charge, minDischargeRate),
+      this.charge
+    );
+    this.charge -= discharge;
+    store.commit("addMoney", value * discharge);
+  }
+
+  activate(charge) {
+    this.charge = Math.min(1, this.charge + charge);
   }
 }
